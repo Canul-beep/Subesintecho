@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sube Sin Techo — Rise Without a Ceiling</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --purple-deep: #3D2B8E;
+      --purple-light: #7B5EA7;
+      --purple-mid: #5A3FA0;
+      --white: #FFFFFF;
+      --lavender: #F3EFFF;
+      --lavender-dark: #E4DCFF;
+      --text-dark: #1A1235;
+      --text-mid: #4A3B7A;
+      --text-muted: #7A6BA0;
+      --card-shadow: 0 4px 24px rgba(61, 43, 142, 0.10);
+      --card-shadow-hover: 0 8px 40px rgba(61, 43, 142, 0.18);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--lavender);
+      color: var(--text-dark);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4 { font-family: 'Playfair Display', serif; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      padding: 0 2rem;
+      height: 68px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(61, 43, 142, 0.96);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      transition: background 0.3s;
+    }
+
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: var(--white);
+      letter-spacing: 0.02em;
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--lavender-dark); font-style: italic; }
+
+    .nav-links {
+      display: flex; gap: 2rem; list-style: none;
+    }
+    .nav-links a {
+      color: rgba(255,255,255,0.85); font-size: 0.875rem;
+      font-weight: 500; text-decoration: none; letter-spacing: 0.03em;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--white); }
+
+    .nav-cta {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: var(--white) !important;
+      padding: 0.4rem 1.1rem;
+      border-radius: 100px;
+      transition: background 0.2s !important;
+    }
+    .nav-cta:hover { background: rgba(255,255,255,0.25) !important; }
+
+    .hamburger {
+      display: none; flex-direction: column; gap: 5px;
+      cursor: pointer; background: none; border: none; padding: 4px;
+    }
+    .hamburger span {
+      display: block; width: 24px; height: 2px;
+      background: var(--white); border-radius: 2px;
+      transition: transform 0.3s, opacity 0.3s;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    .mobile-menu {
+      display: none; position: fixed; top: 68px; left: 0; right: 0;
+      background: var(--purple-deep); z-index: 999;
+      padding: 1.5rem 2rem 2rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      flex-direction: column; gap: 1.25rem;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      color: rgba(255,255,255,0.9); font-size: 1rem;
+      font-weight: 500; text-decoration: none;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding-bottom: 1rem;
+    }
+    .mobile-menu a:last-child { border-bottom: none; padding-bottom: 0; }
+
+    /* ── SECTION UTILITY ── */
+    section { padding: 6rem 2rem; }
+    .container { max-width: 1100px; margin: 0 auto; }
+
+    .section-label {
+      font-size: 0.75rem; font-weight: 700;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--purple-light); margin-bottom: 0.75rem;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .section-label::before {
+      content: ''; display: inline-block;
+      width: 24px; height: 2px; background: var(--purple-light);
+    }
+
+    .section-title {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 900; line-height: 1.15;
+      color: var(--text-dark);
+      margin-bottom: 1.25rem;
+    }
+    .section-title.light { color: var(--white); }
+
+    /* ── ANIMATIONS ── */
+    .fade-up {
+      opacity: 0; transform: translateY(40px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+    .fade-up.delay-1 { transition-delay: 0.1s; }
+    .fade-up.delay-2 { transition-delay: 0.2s; }
+    .fade-up.delay-3 { transition-delay: 0.3s; }
+    .fade-up.delay-4 { transition-delay: 0.4s; }
+
+    /* Hero content is always visible — CSS animation instead of JS fade */
+    #hero .fade-up {
+      opacity: 0; transform: translateY(30px);
+      animation: heroFadeIn 0.7s ease forwards;
+    }
+    #hero .fade-up.delay-1 { animation-delay: 0.15s; }
+    #hero .fade-up.delay-2 { animation-delay: 0.3s; }
+    #hero .fade-up.delay-3 { animation-delay: 0.45s; }
+    #hero .fade-up.delay-4 { animation-delay: 0.6s; }
+    @keyframes heroFadeIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      background: var(--purple-deep);
+      display: flex; align-items: center;
+      padding: 0 2rem;
+      position: relative; overflow: hidden;
+    }
+
+    .hero-geo {
+      position: absolute; inset: 0; pointer-events: none; overflow: hidden;
+    }
+    .hero-geo svg { width: 100%; height: 100%; position: absolute; inset: 0; }
+
+    .hero-content {
+      position: relative; z-index: 2;
+      max-width: 760px;
+      padding-top: 5rem;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 100px; padding: 0.35rem 1rem;
+      color: var(--lavender-dark); font-size: 0.8rem; font-weight: 600;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+    .hero-eyebrow i { font-size: 0.7rem; }
+
+    .hero-title {
+      font-size: clamp(3.5rem, 9vw, 7rem);
+      font-weight: 900; color: var(--white);
+      line-height: 0.95; letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+    }
+    .hero-title .italic { font-style: italic; color: var(--lavender-dark); }
+
+    .hero-subtitle {
+      font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+      font-weight: 400; font-family: 'Playfair Display', serif;
+      font-style: italic; color: rgba(255,255,255,0.7);
+      margin-bottom: 1.5rem; letter-spacing: 0.01em;
+    }
+
+    .hero-tagline {
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      font-weight: 600; color: var(--lavender-dark);
+      margin-bottom: 1rem; letter-spacing: 0.02em;
+    }
+
+    .hero-desc {
+      font-size: 1rem; color: rgba(255,255,255,0.65);
+      max-width: 560px; line-height: 1.8;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-buttons { display: flex; flex-wrap: wrap; gap: 1rem; }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-family: 'Inter', sans-serif; font-weight: 600;
+      font-size: 0.9rem; padding: 0.85rem 1.75rem;
+      border-radius: 100px; text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+      cursor: pointer; border: none; letter-spacing: 0.02em;
+    }
+    .btn:hover { transform: translateY(-2px); }
+
+    .btn-primary {
+      background: var(--white); color: var(--purple-deep);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+    .btn-primary:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.2); }
+
+    .btn-outline {
+      background: transparent; color: var(--white);
+      border: 2px solid rgba(255,255,255,0.4);
+    }
+    .btn-outline:hover { border-color: rgba(255,255,255,0.8); background: rgba(255,255,255,0.05); }
+
+    .btn-instagram {
+      background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);
+      color: var(--white);
+      box-shadow: 0 4px 20px rgba(131,58,180,0.35);
+    }
+    .btn-instagram:hover { box-shadow: 0 8px 32px rgba(131,58,180,0.5); }
+
+    .hero-scroll {
+      position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+      z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
+      color: rgba(255,255,255,0.4); font-size: 0.7rem; letter-spacing: 0.1em;
+      text-transform: uppercase; animation: scrollBounce 2s ease-in-out infinite;
+    }
+    @keyframes scrollBounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(6px); }
+    }
+
+    /* ── PROBLEM SECTION ── */
+    #problem {
+      background: var(--white);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem; margin: 3rem 0 2.5rem;
+    }
+
+    .stat-card {
+      background: var(--lavender);
+      border-radius: 20px; padding: 2.5rem 2rem;
+      border: 1px solid var(--lavender-dark);
+      text-align: center;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .stat-card:hover { transform: translateY(-4px); box-shadow: var(--card-shadow-hover); }
+
+    .stat-card .stat-icon {
+      width: 52px; height: 52px;
+      background: var(--purple-deep); border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1.25rem;
+      color: var(--white); font-size: 1.25rem;
+    }
+
+    .stat-number {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.5rem, 5vw, 3.5rem);
+      font-weight: 900; color: var(--purple-deep);
+      line-height: 1; margin-bottom: 0.75rem;
+      letter-spacing: -0.02em;
+    }
+
+    .stat-label {
+      font-size: 0.88rem; color: var(--text-mid);
+      line-height: 1.6; font-weight: 400;
+    }
+    .stat-label strong { color: var(--purple-deep); }
+
+    .problem-closing {
+      max-width: 680px; margin: 0 auto;
+      text-align: center; font-size: 1.05rem;
+      color: var(--text-mid); line-height: 1.8;
+    }
+    .problem-closing em {
+      font-style: normal; font-weight: 700;
+      color: var(--purple-deep);
+    }
+
+    /* ── MEXICO SECTION ── */
+    #mexico {
+      background: linear-gradient(135deg, var(--purple-deep) 0%, var(--purple-mid) 100%);
+    }
+
+    .mexico-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 4rem;
+      align-items: center; margin-top: 3rem;
+    }
+
+    .mexico-stats { display: flex; flex-direction: column; gap: 1.25rem; }
+
+    .mexico-stat-item {
+      display: flex; gap: 1rem; align-items: flex-start;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px; padding: 1.25rem 1.5rem;
+      transition: background 0.2s;
+    }
+    .mexico-stat-item:hover { background: rgba(255,255,255,0.1); }
+
+    .mexico-stat-item .dot {
+      width: 10px; height: 10px; min-width: 10px;
+      background: var(--lavender-dark); border-radius: 50%;
+      margin-top: 0.4rem;
+    }
+
+    .mexico-stat-item p {
+      font-size: 0.92rem; color: rgba(255,255,255,0.85);
+      line-height: 1.65;
+    }
+    .mexico-stat-item p strong {
+      color: var(--white); font-weight: 700;
+    }
+
+    .mexico-quote-card {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 24px; padding: 3rem 2.5rem;
+      position: relative; overflow: hidden;
+    }
+    .mexico-quote-card::before {
+      content: '\201C';
+      font-family: 'Playfair Display', serif;
+      font-size: 12rem; line-height: 1;
+      color: rgba(255,255,255,0.06);
+      position: absolute; top: -1.5rem; left: 1rem;
+      pointer-events: none;
+    }
+
+    .mexico-quote-card blockquote {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+      font-weight: 700; font-style: italic;
+      color: var(--white); line-height: 1.5;
+      position: relative; z-index: 1;
+    }
+
+    .mexico-quote-card .quote-source {
+      margin-top: 1.5rem; font-size: 0.8rem;
+      color: rgba(255,255,255,0.5); letter-spacing: 0.05em;
+      text-transform: uppercase; font-weight: 600;
+    }
+
+    /* ── CONCEPTS SECTION ── */
+    #concepts {
+      background: var(--lavender);
+    }
+
+    .concepts-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem; margin-top: 3rem;
+    }
+
+    .concept-card {
+      background: var(--white); border-radius: 20px;
+      padding: 2rem 2rem 2.25rem;
+      border: 1px solid var(--lavender-dark);
+      box-shadow: var(--card-shadow);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .concept-card:hover { transform: translateY(-4px); box-shadow: var(--card-shadow-hover); }
+
+    .concept-card .concept-num {
+      font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--purple-light); margin-bottom: 0.75rem;
+    }
+
+    .concept-card h3 {
+      font-size: 1.2rem; font-weight: 700;
+      color: var(--purple-deep); margin-bottom: 0.75rem;
+      line-height: 1.3;
+    }
+
+    .concept-card p {
+      font-size: 0.9rem; color: var(--text-mid); line-height: 1.75;
+    }
+
+    .concept-card .concept-tag {
+      display: inline-block; margin-top: 1rem;
+      background: var(--lavender); color: var(--purple-deep);
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase; padding: 0.3rem 0.8rem;
+      border-radius: 100px;
+    }
+
+    /* ── ABOUT SECTION ── */
+    #about {
+      background: var(--white);
+    }
+
+    .about-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 2rem; margin-top: 3rem;
+    }
+
+    .about-col {
+      padding: 2rem;
+      border-radius: 20px;
+      border: 1px solid var(--lavender-dark);
+      background: var(--lavender);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .about-col:hover { transform: translateY(-4px); box-shadow: var(--card-shadow-hover); }
+
+    .about-col .about-icon {
+      width: 48px; height: 48px;
+      background: var(--purple-deep); border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--white); font-size: 1.1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .about-col h3 {
+      font-size: 1.1rem; font-weight: 700;
+      color: var(--purple-deep); margin-bottom: 0.75rem;
+    }
+
+    .about-col p {
+      font-size: 0.9rem; color: var(--text-mid); line-height: 1.75;
+    }
+
+    /* ── ACTION SECTION ── */
+    #action {
+      background: var(--lavender);
+    }
+
+    .action-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem; margin-top: 3rem;
+    }
+
+    .action-card {
+      background: var(--white); border-radius: 20px;
+      padding: 2.5rem 2rem;
+      border: 1px solid var(--lavender-dark);
+      box-shadow: var(--card-shadow); text-align: center;
+      transition: transform 0.3s, box-shadow 0.3s;
+      position: relative; overflow: hidden;
+    }
+    .action-card:hover { transform: translateY(-5px); box-shadow: var(--card-shadow-hover); }
+    .action-card::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--purple-deep), var(--purple-light));
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.3s ease;
+    }
+    .action-card:hover::after { transform: scaleX(1); }
+
+    .action-card .action-icon {
+      width: 64px; height: 64px;
+      background: linear-gradient(135deg, var(--purple-deep), var(--purple-light));
+      border-radius: 18px; display: flex;
+      align-items: center; justify-content: center;
+      margin: 0 auto 1.5rem;
+      color: var(--white); font-size: 1.5rem;
+      box-shadow: 0 6px 20px rgba(61, 43, 142, 0.25);
+    }
+
+    .action-card h3 {
+      font-size: 1.1rem; font-weight: 700;
+      color: var(--purple-deep); margin-bottom: 0.75rem;
+    }
+
+    .action-card p {
+      font-size: 0.88rem; color: var(--text-mid); line-height: 1.75;
+    }
+
+    .action-closing {
+      text-align: center; margin-top: 3.5rem;
+      padding: 2.5rem 2rem;
+      background: linear-gradient(135deg, var(--purple-deep), var(--purple-mid));
+      border-radius: 24px; max-width: 700px; margin-left: auto; margin-right: auto;
+    }
+    .action-closing p {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.15rem, 2.5vw, 1.5rem);
+      font-weight: 700; color: var(--white); line-height: 1.5;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--text-dark); color: rgba(255,255,255,0.7);
+      padding: 4rem 2rem 2.5rem;
+    }
+
+    .footer-inner {
+      max-width: 1100px; margin: 0 auto;
+    }
+
+    .footer-top {
+      display: flex; justify-content: space-between;
+      align-items: flex-start; flex-wrap: wrap;
+      gap: 2rem; padding-bottom: 2.5rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      margin-bottom: 2rem;
+    }
+
+    .footer-brand .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.75rem; font-weight: 900;
+      color: var(--white); margin-bottom: 0.25rem;
+    }
+    .footer-brand .footer-tagline {
+      font-size: 0.9rem; font-style: italic;
+      color: rgba(255,255,255,0.5);
+    }
+    .footer-brand .footer-ig {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      margin-top: 1.25rem; color: var(--lavender-dark);
+      text-decoration: none; font-size: 0.9rem; font-weight: 600;
+      transition: color 0.2s;
+    }
+    .footer-brand .footer-ig:hover { color: var(--white); }
+
+    .footer-refs h4 {
+      font-family: 'Inter', sans-serif; font-size: 0.75rem;
+      font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(255,255,255,0.4); margin-bottom: 1rem;
+    }
+    .footer-refs ul { list-style: none; display: flex; flex-direction: column; gap: 0.4rem; }
+    .footer-refs li { font-size: 0.8rem; color: rgba(255,255,255,0.45); }
+
+    .footer-bottom {
+      font-size: 0.78rem; color: rgba(255,255,255,0.3);
+      text-align: center; line-height: 1.6;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .mexico-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .concepts-grid { grid-template-columns: 1fr; }
+      .about-grid { grid-template-columns: 1fr; }
+      .action-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 600px) {
+      section { padding: 4rem 1.25rem; }
+      .hero-buttons { flex-direction: column; }
+      .btn { width: 100%; justify-content: center; }
+      .stats-grid { grid-template-columns: 1fr; }
+      .footer-top { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="navbar">
+    <a href="#hero" class="nav-logo">Sube <span>Sin Techo</span></a>
+    <ul class="nav-links">
+      <li><a href="#problem">The Problem</a></li>
+      <li><a href="#mexico">Mexico</a></li>
+      <li><a href="#concepts">Concepts</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="https://www.instagram.com/subesintecho" target="_blank" rel="noopener" class="nav-cta"><i class="fab fa-instagram"></i> @subesintecho</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#problem" onclick="closeMobile()">The Problem</a>
+    <a href="#mexico" onclick="closeMobile()">Mexico</a>
+    <a href="#concepts" onclick="closeMobile()">Concepts</a>
+    <a href="#about" onclick="closeMobile()">About</a>
+    <a href="#action" onclick="closeMobile()">Be the Change</a>
+    <a href="https://www.instagram.com/subesintecho" target="_blank" rel="noopener"><i class="fab fa-instagram"></i> @subesintecho</a>
+  </div>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-geo">
+      <svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="geo" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
+            <polygon points="40,4 76,24 76,56 40,76 4,56 4,24" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+          </pattern>
+        </defs>
+        <rect width="1440" height="900" fill="url(#geo)"/>
+        <circle cx="900" cy="450" r="380" fill="rgba(123,94,167,0.12)"/>
+        <circle cx="1100" cy="200" r="200" fill="rgba(123,94,167,0.08)"/>
+        <circle cx="200" cy="700" r="250" fill="rgba(123,94,167,0.07)"/>
+        <line x1="0" y1="900" x2="1440" y2="0" stroke="rgba(255,255,255,0.03)" stroke-width="1.5"/>
+        <line x1="0" y1="700" x2="1440" y2="200" stroke="rgba(255,255,255,0.025)" stroke-width="1"/>
+      </svg>
+    </div>
+
+    <div class="container hero-content">
+      <div class="hero-eyebrow fade-up">
+        <i class="fas fa-circle"></i>
+        A Gender Equity Campaign
+      </div>
+      <h1 class="hero-title fade-up delay-1">
+        Sube<br><span class="italic">Sin Techo</span>
+      </h1>
+      <p class="hero-subtitle fade-up delay-2">Rise Without a Ceiling</p>
+      <p class="hero-tagline fade-up delay-2">El talento no debería tener techo.</p>
+      <p class="hero-desc fade-up delay-3">
+        A campaign empowering future business professionals to recognize and challenge workplace gender inequality.
+      </p>
+      <div class="hero-buttons fade-up delay-4">
+        <a href="#problem" class="btn btn-primary">
+          <i class="fas fa-arrow-down"></i> Learn More
+        </a>
+        <a href="https://www.instagram.com/subesintecho" target="_blank" rel="noopener" class="btn btn-instagram">
+          <i class="fab fa-instagram"></i> Follow Us on Instagram
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-scroll">
+      <i class="fas fa-chevron-down"></i>
+      <span>Scroll</span>
+    </div>
+  </section>
+
+  <!-- PROBLEM -->
+  <section id="problem">
+    <div class="container">
+      <p class="section-label fade-up">Global Data</p>
+      <h2 class="section-title fade-up delay-1">The Invisible Barrier</h2>
+
+      <div class="stats-grid">
+        <div class="stat-card fade-up delay-1">
+          <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+          <div class="stat-number" data-target="49" data-suffix="% → 29%">0%</div>
+          <p class="stat-label">Women drop from <strong>49% at entry level</strong> to just <strong>29% at C-suite</strong><br><em style="font-size:0.8em;color:var(--text-muted)">McKinsey & LeanIn.Org, 2024</em></p>
+        </div>
+        <div class="stat-card fade-up delay-2">
+          <div class="stat-icon"><i class="fas fa-hourglass-half"></i></div>
+          <div class="stat-number" data-target="152" data-suffix=" years">0</div>
+          <p class="stat-label">Time needed to close the <strong>global gender gap</strong> at current pace<br><em style="font-size:0.8em;color:var(--text-muted)">WEF, 2024</em></p>
+        </div>
+        <div class="stat-card fade-up delay-3">
+          <div class="stat-icon"><i class="fas fa-building"></i></div>
+          <div class="stat-number" data-target="11" data-suffix="%">0%</div>
+          <p class="stat-label">Fortune 500 companies <strong>led by a female CEO</strong> in 2025</p>
+        </div>
+      </div>
+
+      <p class="problem-closing fade-up">
+        Women enter the corporate world at near parity but are progressively filtered out at every level. This is not a coincidence. <em>It is a structure.</em>
+      </p>
+    </div>
+  </section>
+
+  <!-- MEXICO -->
+  <section id="mexico">
+    <div class="container">
+      <p class="section-label fade-up" style="color:rgba(255,255,255,0.5)">Datos Locales</p>
+      <h2 class="section-title light fade-up delay-1">Mexico: The Reality</h2>
+
+      <div class="mexico-grid">
+        <div class="mexico-stats">
+          <div class="mexico-stat-item fade-up delay-1">
+            <span class="dot"></span>
+            <p><strong>13%</strong> of board seats in listed Mexican companies are held by women. <em style="color:rgba(255,255,255,0.5);font-size:0.85em">(IMCO, 2024)</em></p>
+          </div>
+          <div class="mexico-stat-item fade-up delay-2">
+            <span class="dot"></span>
+            <p>Women in CEO roles <strong>dropped from 4% to 3%</strong> between 2023 and 2024. <em style="color:rgba(255,255,255,0.5);font-size:0.85em">(IMCO, 2024)</em></p>
+          </div>
+          <div class="mexico-stat-item fade-up delay-3">
+            <span class="dot"></span>
+            <p>Mexico ranks <strong>3rd from the bottom</strong> in the OECD for female board representation.</p>
+          </div>
+          <div class="mexico-stat-item fade-up delay-4">
+            <span class="dot"></span>
+            <p>At the current pace, Mexico will not achieve gender parity on corporate boards until <strong>2052</strong>. <em style="color:rgba(255,255,255,0.5);font-size:0.85em">(IMCO, 2024)</em></p>
+          </div>
+        </div>
+
+        <div class="mexico-quote-card fade-up delay-2">
+          <blockquote>
+            "Mexico will not have equal boards until 2052. That is not equality. That is not even equity."
+          </blockquote>
+          <p class="quote-source">— Sube Sin Techo, 2026</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONCEPTS -->
+  <section id="concepts">
+    <div class="container">
+      <p class="section-label fade-up">Theory & Framework</p>
+      <h2 class="section-title fade-up delay-1">Understanding the Gap</h2>
+
+      <div class="concepts-grid">
+        <div class="concept-card fade-up delay-1">
+          <p class="concept-num">01 / Structure</p>
+          <h3>Gender as a Social Structure</h3>
+          <p>Gender is not biology. It is built through cultural, political, and legal elements that assign different roles and access to resources to men and women.</p>
+          <span class="concept-tag">León Tovar, 2020</span>
+        </div>
+        <div class="concept-card fade-up delay-2">
+          <p class="concept-num">02 / Power</p>
+          <h3>Hegemonic Masculinity</h3>
+          <p>The dominant, culturally exalted form of masculinity associated with authority and dominance. In business, this defines what 'leadership' is supposed to look like — and it was never designed with women in mind.</p>
+          <span class="concept-tag">Connell & Messerschmidt, 2005</span>
+        </div>
+        <div class="concept-card fade-up delay-3">
+          <p class="concept-num">03 / Justice</p>
+          <h3>Equality vs. Equity</h3>
+          <p>Equality means giving everyone the same. Equity means giving each person what they need to reach the same outcome. Mexico achieved equality in politics but has not applied equity thinking to the private sector.</p>
+          <span class="concept-tag">Key Framework</span>
+        </div>
+        <div class="concept-card fade-up delay-4">
+          <p class="concept-num">04 / Pipeline</p>
+          <h3>The Broken Rung</h3>
+          <p>In 2024, for every 100 men promoted to their first managerial position, only 81 women were promoted. This first missed step compounds at every level above it.</p>
+          <span class="concept-tag">McKinsey & LeanIn.Org, 2024</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="container">
+      <p class="section-label fade-up">Our Campaign</p>
+      <h2 class="section-title fade-up delay-1">About Sube Sin Techo</h2>
+
+      <div class="about-grid">
+        <div class="about-col fade-up delay-1">
+          <div class="about-icon"><i class="fas fa-users"></i></div>
+          <h3>Who We Are</h3>
+          <p>A campaign created by business students at Tecnológico de Monterrey, built on academic research and course frameworks from Gender, Society and Human Rights.</p>
+        </div>
+        <div class="about-col fade-up delay-2">
+          <div class="about-icon"><i class="fas fa-graduation-cap"></i></div>
+          <h3>Who It's For</h3>
+          <p>University business students aged 18 to 25 who are about to enter the workforce and will shape the corporate cultures of tomorrow.</p>
+        </div>
+        <div class="about-col fade-up delay-3">
+          <div class="about-icon"><i class="fas fa-lightbulb"></i></div>
+          <h3>What We Use</h3>
+          <p>The equity vs. equality framework, intersectionality, and gender theory to show students the structural gap they will face and position them as part of the solution.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACTION -->
+  <section id="action">
+    <div class="container">
+      <p class="section-label fade-up">Take Action</p>
+      <h2 class="section-title fade-up delay-1">Be Part of the Change</h2>
+
+      <div class="action-grid">
+        <div class="action-card fade-up delay-1">
+          <div class="action-icon"><i class="fas fa-handshake"></i></div>
+          <h3>Mentor Women in Your Program</h3>
+          <p>Use your position to support, listen and open doors for women in your academic and professional circle.</p>
+        </div>
+        <div class="action-card fade-up delay-2">
+          <div class="action-icon"><i class="fas fa-bullhorn"></i></div>
+          <h3>Challenge Gender Bias</h3>
+          <p>Speak up, question assumptions and make space for everyone's ideas in group projects and team environments.</p>
+        </div>
+        <div class="action-card fade-up delay-3">
+          <div class="action-icon"><i class="fas fa-balance-scale"></i></div>
+          <h3>Advocate for Equal Hiring</h3>
+          <p>Push for fair opportunities and diverse teams in the companies and internships you join.</p>
+        </div>
+      </div>
+
+      <div class="action-closing fade-up">
+        <p>Being a future business leader means choosing what kind of culture you build.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="footer-logo">Sube Sin Techo</div>
+          <div class="footer-tagline">Rise Without a Ceiling</div>
+          <a href="https://www.instagram.com/subesintecho" target="_blank" rel="noopener" class="footer-ig">
+            <i class="fab fa-instagram"></i> @subesintecho
+          </a>
+        </div>
+        <div class="footer-refs">
+          <h4>References</h4>
+          <ul>
+            <li>IMCO (2024). Mujeres en los consejos de administración.</li>
+            <li>McKinsey & LeanIn.Org (2024). Women in the Workplace Report.</li>
+            <li>World Economic Forum (2024). Global Gender Gap Report.</li>
+            <li>León Tovar, S. (2020). Género y discriminación.</li>
+            <li>Connell, R. W. & Messerschmidt, J. W. (2005). Hegemonic Masculinity. <em>Gender & Society.</em></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        Built for Gender, Society and Human Rights — Tecnológico de Monterrey, 2026
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ── Hamburger
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('open');
+      mobileMenu.classList.toggle('open');
+    });
+    function closeMobile() {
+      hamburger.classList.remove('open');
+      mobileMenu.classList.remove('open');
+    }
+
+    // ── Fade-up on scroll
+    const fadeEls = document.querySelectorAll('.fade-up');
+    const fadeObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          fadeObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    fadeEls.forEach(el => fadeObserver.observe(el));
+
+    // ── Count-up animation
+    function countUp(el, target, suffix, duration = 1800) {
+      const isDecimal = String(target).includes('.');
+      const start = performance.now();
+      const step = (now) => {
+        const progress = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const value = Math.round(eased * target);
+        el.textContent = value + suffix;
+        if (progress < 1) requestAnimationFrame(step);
+        else el.textContent = target + suffix;
+      };
+      requestAnimationFrame(step);
+    }
+
+    const statNumbers = document.querySelectorAll('.stat-number[data-target]');
+    const countObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const el = entry.target;
+          const target = parseInt(el.dataset.target, 10);
+          const suffix = el.dataset.suffix || '';
+          countUp(el, target, suffix);
+          countObserver.unobserve(el);
+        }
+      });
+    }, { threshold: 0.5 });
+    statNumbers.forEach(el => countObserver.observe(el));
+
+    // ── Hero elements: trigger immediately
+    document.querySelectorAll('#hero .fade-up').forEach((el, i) => {
+      setTimeout(() => el.classList.add('visible'), 200 + i * 120);
+    });
+  </script>
+</body>
+</html>
